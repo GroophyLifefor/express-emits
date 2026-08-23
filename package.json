@@ -21,9 +21,15 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "dev": "nodemon --ext ts --ignore dist --exec \"tsc && node dist/main.js\"",
-    "test": "tsc && node --test dist/*.test.js"
+    "test": "tsc && node --test dist/*.test.js",
+    "bench": "tsc && node dist/bench/rps-bench.js"
   },
-  "keywords": ["express", "middleware", "logging", "events"],
+  "keywords": [
+    "express",
+    "middleware",
+    "logging",
+    "events"
+  ],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
@@ -31,9 +37,11 @@
     "express": "^5.0.0"
   },
   "devDependencies": {
-    "express": "^5.2.1",
+    "@types/autocannon": "^7.12.7",
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
+    "autocannon": "^8.0.0",
+    "express": "^5.2.1",
     "nodemon": "^3.1.14",
     "typescript": "^7.0.2"
   }

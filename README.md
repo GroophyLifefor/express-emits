@@ -40,11 +40,11 @@ emitter, so two apps in one process stay isolated.
 
 | Option | Default | |
 |---|---|---|
-| `unguessableRequestIds` | `false` | Use `randomUUID()` instead of a per-process counter. Turn on if IDs ever leave the process or need to be unpredictable; the counter is faster and fine for correlating logs. |
+| `unguessableRequestIds` | `false` | Use `randomUUID()` instead of a per-process counter. Turn on if IDs ever leave the process or need to be unpredictable. The counter is faster and fine for correlating logs. |
 
 ### `on(event, listener)`
 
-Typed against the event map — wrong event name or wrong payload shape is a compile error.
+Typed against the event map. Wrong event name or wrong payload shape is a compile error.
 
 | Event | Payload |
 |---|---|
@@ -76,11 +76,28 @@ request.start  id=1
 
 A middleware that a given request skips does not consume a number for that request.
 
+## Performance
+
+`npm run bench` runs [bench/rps-bench.ts](bench/rps-bench.ts): five scenarios at 30s / 50
+connections via [autocannon](https://github.com/mcollina/autocannon). Two independent
+runs on the same machine:
+
+| Scenario | Run 1 | Run 2 |
+|---|---|---|
+| express (base) | 18330 req/s | 17201 req/s |
+| zero listeners, counter IDs | 16551 req/s (-9.7%) | 16885 req/s (-1.8%) |
+| silent listeners, counter IDs | 16405 req/s (-10.5%) | 16260 req/s (-5.5%) |
+| zero listeners, `unguessableRequestIds: true` | 16342 req/s (-10.8%) | 16455 req/s (-4.3%) |
+| silent listeners, `unguessableRequestIds: true` | 16063 req/s (-12.4%) | 15791 req/s (-8.2%) |
+
+Benchmark was run on my local computer, that is why the benchmark results are not stable.
+
 ## Development
 
 ```bash
 npm run build    # compile to dist/
 npm test         # build, then run the test suite
+npm run bench    # 30s x 5 RPS benchmark against plain Express, see Performance
 npm run dev      # watch mode, runs the demo in main.ts
 ```
 
